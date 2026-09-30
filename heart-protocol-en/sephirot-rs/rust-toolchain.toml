@@ -1,0 +1,6 @@
+# 固定使用 GNU/LLVM 工具链 (gnullvm)：
+# 在未安装 Visual Studio (MSVC) 与 mingw-w64 (dlltool) 的机器上也能完成链接，
+# 全部链接由 rust-lld + raw-dylib 完成，无需外部工具。
+# 已安装 MSVC 的机器可删除本文件或改为 stable-x86_64-pc-windows-msvc。
+[toolchain]
+channel = "stable-x86_64-pc-windows-gnullvm"

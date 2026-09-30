@@ -1,0 +1,56 @@
+[package]
+name = "sephirot-rs"
+version = "1.0.0"
+edition = "2021"
+description = "16-Sephiroth Twin-Heart Protocol Rust interpreter - Kabbalah Tree of Life x CUDA PTX sm_89 x AVX-512"
+authors = ["Yuexiangrui <yuexiangruiyue@gmail.com>"]
+
+[[bin]]
+name = "sephirot"
+path = "src/main.rs"
+
+[lib]
+name = "heart_core"
+path = "src/lib.rs"
+# cdylib = C-ABI dynamic library (heart_core.dll), callable from any language via ctypes/FFI
+# rlib   = keep the Rust static-library form, used by this crate's bin and tests
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+# GPU compute core: CUDA / general-purpose GPU
+cudarc = { version = "0.12", optional = true, features = ["cuda-12040"] }
+
+# Parallel computation (CPU multi-threading)
+rayon = "1.10"
+
+# High-performance hashing
+ahash = "0.8"
+indexmap = "2"
+
+# Error handling
+anyhow = "1"
+thiserror = "2"
+
+# CLI parsing
+clap = { version = "4", features = ["derive"] }
+
+# Terminal colored output
+colored = "2"
+
+# Serialization (vocabulary export as JSON)
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# Unicode / Chinese text handling
+unicode-segmentation = "1"
+
+[features]
+default = []
+cuda = ["dep:cudarc"]
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+# Note: panic="abort" must NOT be used — the catch_unwind at the FFI boundary needs unwind,
+# otherwise any kernel panic would directly kill the host process (Python/C#/Go, etc.)
