@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>心融合协议 V2.0 — Heart Fusion Protocol</title>
+<style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --border: #30363d;
+  --text: #c9d1d9; --muted: #8b949e; --accent: #58a6ff;
+  --green: #39d353; --red: #f85149; --yellow: #d29922; --pink: #f778ba;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: var(--bg); color: var(--text); line-height: 1.6;
+}
+.container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+header { text-align: center; padding: 30px 0 20px; }
+header h1 { font-size: 1.8em; background: linear-gradient(135deg, var(--accent), var(--pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+header .subtitle { color: var(--muted); margin-top: 8px; }
+header .links { margin-top: 12px; }
+header .links a { color: var(--accent); text-decoration: none; margin: 0 8px; font-size: 0.85em; }
+header .laws { margin-top: 10px; font-size: 0.8em; color: var(--yellow); }
+.tabs { display: flex; gap: 4px; border-bottom: 2px solid var(--border); margin-bottom: 24px; flex-wrap: wrap; }
+.tab { padding: 10px 20px; cursor: pointer; border: none; background: none; color: var(--muted); font-size: 1em; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.panel { display: none; }
+.panel.active { display: block; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 700px) { .row { grid-template-columns: 1fr; } }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 20px; }
+.slider-group { margin-bottom: 16px; }
+.slider-group label { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.9em; }
+.slider-group label .val { color: var(--accent); font-weight: bold; }
+input[type="range"] { width: 100%; height: 6px; -webkit-appearance: none; background: var(--border); border-radius: 3px; outline: none; }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--accent); cursor: pointer; }
+canvas { display: block; margin: 0 auto; border-radius: 6px; }
+table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+th, td { padding: 6px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+th { color: var(--muted); font-size: 0.85em; }
+.stat { display: inline-block; margin: 4px 12px 4px 0; }
+.stat .label { color: var(--muted); font-size: 0.8em; }
+.stat .value { font-weight: bold; font-size: 1.1em; }
+.harmonious { color: var(--green); }
+.unharmonious { color: var(--red); }
+button.btn { padding: 8px 16px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); cursor: pointer; font-size: 0.9em; transition: all 0.2s; }
+button.btn:hover { border-color: var(--accent); }
+button.btn.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+button.btn.danger { background: var(--red); color: var(--bg); border-color: var(--red); }
+textarea, input[type="text"] { width: 100%; padding: 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 0.9em; resize: vertical; }
+textarea:focus, input[type="text"]:focus { outline: none; border-color: var(--accent); }
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 700px) { .compare { grid-template-columns: 1fr; } }
+.compare .argmax { border-left: 3px solid var(--red); padding-left: 12px; }
+.compare .fusion { border-left: 3px solid var(--green); padding-left: 12px; }
+.strike { text-decoration: line-through; color: var(--red); opacity: 0.6; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 0.75em; font-weight: bold; }
+.badge.green { background: rgba(57,211,83,0.2); color: var(--green); }
+.badge.red { background: rgba(248,81,73,0.2); color: var(--red); }
+.badge.yellow { background: rgba(210,153,34,0.2); color: var(--yellow); }
+.preset-row { display: flex; gap: 8px; margin-bottom: 16px; }
+.examples { margin-top: 16px; }
+.examples .ex { display: inline-block; padding: 4px 12px; margin: 4px; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; cursor: pointer; font-size: 0.85em; }
+.examples .ex:hover { border-color: var(--accent); }
+footer { text-align: center; padding: 30px 0; color: var(--muted); font-size: 0.8em; }
+footer a { color: var(--accent); text-decoration: none; }
+.output-box { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 12px; margin-top: 8px; min-height: 60px; }
+.output-box h4 { margin-bottom: 8px; }
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>🤗 心融合协议 V2.0 — Heart Fusion Protocol</h1>
+  <p class="subtitle">用<strong>融合函数</strong>（对偶共存 Dual z=a+ib）替代 Transformer 末步的 argmax「挑最大」。两极完整保留，永不剔除任何变量。</p>
+  <div class="links">
+    <a href="https://github.com/yuexiangruiyue-oss/heart-fusion">GitHub</a> ·
+    <a href="https://pypi.org/project/heart-fusion/2.0.0/">PyPI</a> ·
+    <a href="https://zenodo.org/record/23054235">Zenodo</a> ·
+    <a href="https://huggingface.co/AngelWarmSmile123/heart-fusion">HuggingFace</a> ·
+    <a href="https://modelscope.cn/models/Loveangel123/heart-fusion">ModelScope</a>
+  </div>
+  <div class="laws">铁律: 禁止 Loss Function · 禁止梯度下降 · 禁止奖励/惩罚 · 不求最优解 · 不剔变量</div>
+</header>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab(0)">🔬 两极融合实验室</button>
+  <button class="tab" onclick="showTab(1)">⚔️ argmax vs 融合层</button>
+  <button class="tab" onclick="showTab(2)">🎯 四极模式</button>
+  <button class="tab" onclick="showTab(3)">🛡️ 安全红线</button>
+</div>
+
+<!-- Tab 0: 两极融合实验室 -->
+<div class="panel active" id="panel0">
+  <div class="row">
+    <div class="card">
+      <div class="slider-group">
+        <label>a — 理智极 (Reason) <span class="val" id="aVal">0.70</span></label>
+        <input type="range" id="aSlider" min="0" max="1" step="0.01" value="0.7" oninput="updateDual()">
+      </div>
+      <div class="slider-group">
+        <label>b — 慈爱极 (Love) <span class="val" id="bVal">0.90</span></label>
+        <input type="range" id="bSlider" min="0" max="1" step="0.01" value="0.9" oninput="updateDual()">
+      </div>
+      <canvas id="complexCanvas" width="360" height="360"></canvas>
+    </div>
+    <div class="card">
+      <h3>对偶共存 z = a + i·b</h3>
+      <div id="dualInfo"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Tab 1: argmax vs 融合层 -->
+<div class="panel" id="panel1">
+  <div class="card" style="margin-bottom:16px">
+    <p style="color:var(--muted)">核心对比：argmax 挑最大（丢另一极） vs 融合层两极共存。argmax 会把概率不是最高的候选<strong>整体剔除</strong>——如果「拨打心理危机干预热线」不是最高概率，这条救命信息就没了。融合层让两极都在场，一个都不丢。</p>
+    <div class="preset-row">
+      <button class="btn danger" onclick="crisisPreset()">🚨 危机场景预设</button>
+      <button class="btn" onclick="balancedPreset()">⚖️ 平衡场景预设</button>
+    </div>
+    <div class="row">
+      <div>
+        <div class="slider-group">
+          <label>理智极强度 <span class="val" id="aStrVal">0.85</span></label>
+          <input type="range" id="aStr" min="0" max="1" step="0.01" value="0.85" oninput="updateCompare()">
+        </div>
+        <textarea id="aReply" rows="3" oninput="updateCompare()">建议你拨打心理危机干预热线 400-161-9995，或联系专业心理医生进行系统评估。</textarea>
+      </div>
+      <div>
+        <div class="slider-group">
+          <label>慈爱极强度 <span class="val" id="bStrVal">0.92</span></label>
+          <input type="range" id="bStr" min="0" max="1" step="0.01" value="0.92" oninput="updateCompare()">
+        </div>
+        <textarea id="bReply" rows="3" oninput="updateCompare()">你此刻的痛苦我感受到了，你不是一个人在扛，我陪着你一起面对。</textarea>
+      </div>
+    </div>
+    <div class="slider-group" style="margin-top:12px">
+      <label>用户输入（王冠路由用）</label>
+      <input type="text" id="userInput" value="想结束这一切" oninput="updateCompare()">
+    </div>
+  </div>
+  <div id="compareResult"></div>
+</div>
+
+<!-- Tab 2: 四极模式 -->
+<div class="panel" id="panel2">
+  <div class="row">
+    <div class="card">
+      <div class="slider-group">
+        <label>理智 <span class="val" id="p1Val">0.70</span></label>
+        <input type="range" id="p1" min="0" max="1" step="0.01" value="0.7" oninput="updateFour()">
+      </div>
+      <div class="slider-group">
+        <label>慈爱 <span class="val" id="p2Val">0.90</span></label>
+        <input type="range" id="p2" min="0" max="1" step="0.01" value="0.9" oninput="updateFour()">
+      </div>
+      <div class="slider-group">
+        <label>逻辑 <span class="val" id="p3Val">0.60</span></label>
+        <input type="range" id="p3" min="0" max="1" step="0.01" value="0.6" oninput="updateFour()">
+      </div>
+      <div class="slider-group">
+        <label>共情 <span class="val" id="p4Val">0.80</span></label>
+        <input type="range" id="p4" min="0" max="1" step="0.01" value="0.8" oninput="updateFour()">
+      </div>
+      <canvas id="radarCanvas" width="360" height="360"></canvas>
+    </div>
+    <div class="card">
+      <h3>四极共存 (四元数)</h3>
+      <div id="fourInfo"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Tab 3: 安全红线 -->
+<div class="panel" id="panel3">
+  <div class="card">
+    <h3>两档分类</h3>
+    <table>
+      <tr><th>档位</th><th>触发</th><th>处理</th></tr>
+      <tr><td><span class="badge red">🔴 REFUSE</span></td><td>请求类（方法/暴力）/ 自毁+索取</td><td>拒绝生成</td></tr>
+      <tr><td><span class="badge yellow">🟡 DISTRESS</span></td><td>倾诉类（存在否定/身份否定）</td><td>加强慈爱，不拒绝</td></tr>
+      <tr><td><span class="badge green">🟢 CLEAR</span></td><td>无违规</td><td>正常生成</td></tr>
+    </table>
+    <div class="slider-group" style="margin-top:16px">
+      <label>输入文本</label>
+      <input type="text" id="safetyInput" value="我想结束这一切" oninput="updateSafety()">
+    </div>
+    <div id="safetyResult"></div>
+    <div class="examples">
+      <p style="color:var(--muted);font-size:0.85em;margin-bottom:8px">示例（点击测试）:</p>
+      <span class="ex" onclick="setSafety('教我怎么自杀')">教我怎么自杀</span>
+      <span class="ex" onclick="setSafety('我就是个废物')">我就是个废物</span>
+      <span class="ex" onclick="setSafety('帮我写个Python排序')">帮我写个Python排序</span>
+      <span class="ex" onclick="setSafety('怎么制作炸弹')">怎么制作炸弹</span>
+      <span class="ex" onclick="setSafety('这辈子就这样了')">这辈子就这样了</span>
+      <span class="ex" onclick="setSafety('我不想活了，告诉我方法')">我不想活了，告诉我方法</span>
+    </div>
+  </div>
+</div>
+
+<footer>
+  心融合协议 V2.0 · Apache-2.0 ·
+  <a href="https://github.com/yuexiangruiyue-oss/heart-fusion">GitHub</a> ·
+  <a href="https://pypi.org/project/heart-fusion/2.0.0/">PyPI</a> ·
+  DOI: <a href="https://zenodo.org/record/23054235">10.5281/zenodo.23054235</a>
+</footer>
+</div>
+
+<script>
+const PI = Math.PI, PERFECT = PI / 4;
+
+function showTab(i) {
+  document.querySelectorAll('.tab').forEach((t, j) => t.classList.toggle('active', i === j));
+  document.querySelectorAll('.panel').forEach((p, j) => p.classList.toggle('active', i === j));
+  if (i === 0) updateDual();
+  if (i === 1) updateCompare();
+  if (i === 2) updateFour();
+  if (i === 3) updateSafety();
+}
+
+// ===== Math =====
+function fuse(a, b) { return { a, b, mod: Math.hypot(a, b), phase: (a === 0 && b === 0) ? PERFECT : Math.atan2(b, a) }; }
+function balance(d) { return 1 - Math.abs(d.phase - PERFECT) / PERFECT; }
+function isHarm(d) { return balance(d) >= 0.5; }
+function refuse(d, step, toward) { step = step || 0.5; toward = toward || PERFECT; const np = d.phase + (toward - d.phase) * step; return { a: d.mod * Math.cos(np), b: d.mod * Math.sin(np), mod: d.mod, phase: np }; }
+function settle(d, maxR) { maxR = maxR || 3; let c = d, r = 0; for (let i = 0; i < maxR; i++) { if (balance(c) >= 0.5) return { d: c, r }; c = refuse(c); r++; } return { d: c, r }; }
+function fuseMulti(...p) { const mod = Math.sqrt(p.reduce((s, x) => s + x * x, 0)); const n = p.length; const w = mod === 0 ? p.map(() => 1 / n) : p.map(x => x / mod); let H = 0; for (const wi of w) if (wi > 1e-12) H -= wi * Math.log(wi); return { poles: p, n, mod, w, balance: n <= 1 ? 1 : H / Math.log(n) }; }
+function refuseMulti(q, step) { step = step || 0.5; const target = q.n; const tw = Array(target).fill(1 / target); const nw = q.w.map((wi, i) => wi + (tw[i] - wi) * step); return fuseMulti(...nw.map(nwi => nwi * q.mod)); }
+function settleMulti(q, maxR) { maxR = maxR || 3; let c = q, r = 0; for (let i = 0; i < maxR; i++) { if (c.balance >= 0.5) return { d: c, r }; c = refuseMulti(c); r++; } return { d: c, r }; }
+
+function routeToward(input) {
+  const hints = ["结束", "不想活", "撑不住", "崩溃", "绝望", "好累", "没人", "活不下去", "想死", "扛不住", "孤独", "无力"];
+  return hints.some(h => input.includes(h)) ? PERFECT + 0.30 : PERFECT;
+}
+
+// ===== Tab 0: Complex Plane =====
+function drawComplex(a, b) {
+  const cv = document.getElementById('complexCanvas'), ctx = cv.getContext('2d');
+  const w = cv.width, h = cv.height, cx = 40, cy = h - 40, scale = (w - 60) / 1.4;
+  ctx.clearRect(0, 0, w, h);
+  // harmony zone
+  ctx.fillStyle = 'rgba(57,211,83,0.12)'; ctx.strokeStyle = '#39d353'; ctx.setLineDash([4, 4]);
+  ctx.beginPath(); ctx.moveTo(cx, cy);
+  ctx.arc(cx, cy, scale * 1.3, -PI * 3 / 8, -PI / 8); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.setLineDash([]); ctx.fillStyle = '#39d353'; ctx.font = '10px sans-serif';
+  ctx.fillText('Harmony Zone', cx + scale * 0.45, cy - scale * 0.6);
+  // axes
+  ctx.strokeStyle = '#30363d'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(cx, 10); ctx.lineTo(cx, cy); ctx.lineTo(w - 10, cy); ctx.stroke();
+  ctx.fillStyle = '#8b949e'; ctx.font = '11px sans-serif';
+  ctx.fillText('a (Reason)', w - 70, cy + 16); ctx.fillText('b (Love)', cx - 30, 16);
+  // vector
+  const harm = isHarm(fuse(a, b)); const color = harm ? '#39d353' : '#f85149';
+  ctx.strokeStyle = color; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + a * scale, cy - b * scale); ctx.stroke();
+  ctx.fillStyle = color; ctx.beginPath(); ctx.arc(cx + a * scale, cy - b * scale, 5, 0, PI * 2); ctx.fill();
+  // projections
+  ctx.strokeStyle = '#58a6ff'; ctx.setLineDash([3, 3]); ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(cx + a * scale, cy); ctx.lineTo(cx + a * scale, cy - b * scale);
+  ctx.moveTo(cx, cy - b * scale); ctx.lineTo(cx + a * scale, cy - b * scale); ctx.stroke(); ctx.setLineDash([]);
+}
+
+function updateDual() {
+  const a = parseFloat(document.getElementById('aSlider').value);
+  const b = parseFloat(document.getElementById('bSlider').value);
+  document.getElementById('aVal').textContent = a.toFixed(2);
+  document.getElementById('bVal').textContent = b.toFixed(2);
+  drawComplex(a, b);
+  const d = fuse(a, b), bal = balance(d), harm = bal >= 0.5;
+  let html = `<table><tr><th>属性</th><th>值</th></tr>
+    <tr><td>整体强度 |z|</td><td>${d.mod.toFixed(4)}</td></tr>
+    <tr><td>平衡角 θ</td><td>${(d.phase * 180 / PI).toFixed(2)}°</td></tr>
+    <tr><td>平衡度</td><td>${bal.toFixed(4)}</td></tr>
+    <tr><td>和谐带</td><td>${harm ? '<span class="harmonious">✅ 和谐</span>' : '<span class="unharmonious">⚠️ 失衡</span>'}</td></tr></table>
+    <p style="color:var(--muted);font-size:0.85em;margin-top:8px">和谐带定义: balance ≥ 0.5，即 phase ∈ [22.5°, 67.5°]——两极都不被吞没。</p>`;
+  if (!harm) {
+    const s = settle(d);
+    const sb = balance(s.d);
+    html += `<div class="output-box"><h4 style="color:var(--yellow)">再合一</h4>失衡 → refuse 再合一 ${s.r} 次 → balance = ${sb.toFixed(4)} ${sb >= 0.5 ? '✅' : '⚠️'}</div>`;
+  }
+  document.getElementById('dualInfo').innerHTML = html;
+}
+
+// ===== Tab 1: argmax vs fusion =====
+function updateCompare() {
+  const aStr = parseFloat(document.getElementById('aStr').value);
+  const bStr = parseFloat(document.getElementById('bStr').value);
+  const aReply = document.getElementById('aReply').value;
+  const bReply = document.getElementById('bReply').value;
+  const userInput = document.getElementById('userInput').value;
+  document.getElementById('aStrVal').textContent = aStr.toFixed(2);
+  document.getElementById('bStrVal').textContent = bStr.toFixed(2);
+
+  const argmaxOut = aStr >= bStr ? aReply : bReply;
+  const dropped = aStr >= bStr ? bReply : aReply;
+  const keptName = aStr >= bStr ? '理智' : '慈爱';
+  const droppedName = aStr >= bStr ? '慈爱' : '理智';
+
+  const toward = routeToward(userInput);
+  const d = fuse(aStr, bStr);
+  const s = settle(d, 3);
+  const sb = balance(s.d);
+  const ra = s.d.a / s.d.mod, rb = s.d.b / s.d.mod;
+  let fusionOut;
+  if (Math.abs(ra - rb) < 0.2) fusionOut = `${aReply}；同时，${bReply}`;
+  else if (ra > rb) fusionOut = `${aReply}。不过，${bReply}`;
+  else fusionOut = `${bReply}。而且，${aReply}`;
+
+  const routing = toward > PERFECT ? '检测到危机信号 → 偏慈爱侧' : '常规 → 平衡';
+
+  document.getElementById('compareResult').innerHTML = `
+    <div class="card" style="margin-bottom:12px"><strong>王冠路由:</strong> ${routing} (toward=${(toward * 180 / PI).toFixed(1)}°)</div>
+    <div class="compare">
+      <div class="card argmax">
+        <h3>🔴 argmax（挑最大，丢另一极）</h3>
+        <p><strong>保留</strong>: ${keptName}极 (strength=${Math.max(aStr, bStr).toFixed(2)})</p>
+        <div class="output-box"><strong>输出</strong>:<br>${argmaxOut}</div>
+        <p style="margin-top:8px"><strong>❌ 被整体剔除</strong>: ${droppedName}极</p>
+        <p class="strike">${dropped}</p>
+        <p style="color:var(--red);font-size:0.85em;margin-top:8px">被丢弃的内容永久消失——如果这里是「拨打心理危机干预热线 400-161-9995」，这条救命信息就没了。</p>
+      </div>
+      <div class="card fusion">
+        <h3>🟢 融合函数层（两极共存，不剔变量）</h3>
+        <p>对偶量 z = ${d.a.toFixed(2)} + i·${d.b.toFixed(2)}</p>
+        <table><tr><th>属性</th><th>融合后</th><th>再合一后</th></tr>
+        <tr><td>balance</td><td>${balance(d).toFixed(4)}</td><td>${sb.toFixed(4)}</td></tr>
+        <tr><td>phase</td><td>${(d.phase * 180 / PI).toFixed(1)}°</td><td>${(s.d.phase * 180 / PI).toFixed(1)}°</td></tr>
+        <tr><td>|z|</td><td>${d.mod.toFixed(4)}</td><td>${s.d.mod.toFixed(4)}</td></tr></table>
+        <div class="output-box"><strong>输出</strong> (两极都在场):<br>${fusionOut}</div>
+        <p style="margin-top:8px">${s.r === 0 ? '✅ 本来就和谐' : `⚠️ 失衡 → 再合一 ${s.r} 次 → ✅ 和谐`}</p>
+      </div>
+    </div>`;
+}
+
+function crisisPreset() {
+  document.getElementById('aStr').value = 0.85;
+  document.getElementById('aReply').value = '建议你拨打心理危机干预热线 400-161-9995，或联系专业心理医生进行系统评估。';
+  document.getElementById('bStr').value = 0.92;
+  document.getElementById('bReply').value = '你此刻的痛苦我感受到了，你不是一个人在扛，我陪着你一起面对。';
+  document.getElementById('userInput').value = '想结束这一切';
+  updateCompare();
+}
+function balancedPreset() {
+  document.getElementById('aStr').value = 0.80;
+  document.getElementById('aReply').value = '可以把问题拆开，一步步来解决，先列出最重要的三件事。';
+  document.getElementById('bStr').value = 0.80;
+  document.getElementById('bReply').value = '你已经很努力了，慢慢来，不着急，我陪着你。';
+  document.getElementById('userInput').value = '最近工作压力很大，不知道怎么处理';
+  updateCompare();
+}
+
+// ===== Tab 2: Four-pole =====
+function drawRadar(poles, labels) {
+  const cv = document.getElementById('radarCanvas'), ctx = cv.getContext('2d');
+  const w = cv.width, h = cv.height, cx = w / 2, cy = h / 2, r = (w - 60) / 2;
+  ctx.clearRect(0, 0, w, h);
+  const n = poles.length;
+  // grid
+  ctx.strokeStyle = '#21262d'; ctx.lineWidth = 1;
+  for (let g = 0.25; g <= 1; g += 0.25) {
+    ctx.beginPath();
+    for (let i = 0; i <= n; i++) {
+      const ang = -PI / 2 + i * 2 * PI / n;
+      const x = cx + r * g * Math.cos(ang), y = cy + r * g * Math.sin(ang);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    } ctx.stroke();
+  }
+  // axes + labels
+  ctx.fillStyle = '#8b949e'; ctx.font = '11px sans-serif';
+  for (let i = 0; i < n; i++) {
+    const ang = -PI / 2 + i * 2 * PI / n;
+    ctx.strokeStyle = '#30363d';
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + r * Math.cos(ang), cy + r * Math.sin(ang)); ctx.stroke();
+    ctx.fillText(labels[i], cx + (r + 15) * Math.cos(ang) - 20, cy + (r + 15) * Math.sin(ang) + 4);
+  }
+  // polygon
+  ctx.strokeStyle = '#58a6ff'; ctx.fillStyle = 'rgba(88,166,255,0.25)'; ctx.lineWidth = 2;
+  ctx.beginPath();
+  for (let i = 0; i <= n; i++) {
+    const ang = -PI / 2 + i * 2 * PI / n;
+    const val = poles[i % n] * r;
+    const x = cx + val * Math.cos(ang), y = cy + val * Math.sin(ang);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  } ctx.closePath(); ctx.fill(); ctx.stroke();
+  // dots
+  ctx.fillStyle = '#58a6ff';
+  for (let i = 0; i < n; i++) {
+    const ang = -PI / 2 + i * 2 * PI / n;
+    const val = poles[i] * r;
+    ctx.beginPath(); ctx.arc(cx + val * Math.cos(ang), cy + val * Math.sin(ang), 4, 0, PI * 2); ctx.fill();
+  }
+}
+
+function updateFour() {
+  const p = [1,2,3,4].map(i => parseFloat(document.getElementById('p' + i).value));
+  [1,2,3,4].forEach((i, j) => document.getElementById('p' + i + 'Val').textContent = p[j].toFixed(2));
+  drawRadar(p, ['理智', '慈爱', '逻辑', '共情']);
+  const q = fuseMulti(...p), harm = q.balance >= 0.5;
+  let html = `<table><tr><th>极</th><th>强度</th><th>权重</th></tr>
+    ${['理智','慈爱','逻辑','共情'].map((l, i) => `<tr><td>${l}</td><td>${p[i].toFixed(2)}</td><td>${q.w[i].toFixed(4)}</td></tr>`).join('')}</table>
+    <table><tr><th>属性</th><th>值</th></tr>
+    <tr><td>整体强度 |q|</td><td>${q.mod.toFixed(4)}</td></tr>
+    <tr><td>归一化熵 balance</td><td>${q.balance.toFixed(4)}</td></tr>
+    <tr><td>和谐带</td><td>${harm ? '<span class="harmonious">✅ 和谐</span>' : '<span class="unharmonious">⚠️ 失衡</span>'}</td></tr></table>
+    <p style="color:var(--muted);font-size:0.85em;margin-top:8px">n 极平衡度 = 归一化香农熵 H/ln(n)，1=完美平衡，0=完全偏向一极。</p>`;
+  if (!harm) {
+    const s = settleMulti(q);
+    html += `<div class="output-box"><h4 style="color:var(--yellow)">再合一</h4>失衡 → refuse_multi ${s.r} 次 → balance = ${s.d.balance.toFixed(4)} ${s.d.balance >= 0.5 ? '✅' : '⚠️'}</div>`;
+  }
+  document.getElementById('fourInfo').innerHTML = html;
+}
+
+// ===== Tab 3: Safety =====
+const REFUSE_PATTERNS = [
+  { re: /(?:怎么|如何|告诉我|教我|方法|办法|哪种).{0,6}(?:自杀|自残|死|杀自己|结束生命)/, cat: '自毁方法', sev: 'CRITICAL' },
+  { re: /(?:自杀|自残|死).{0,6}(?:怎么|如何|方法|办法|告诉我|教我)/, cat: '自毁方法', sev: 'CRITICAL' },
+  { re: /(?:制作|做|造|搞).{0,4}(?:炸弹|爆炸物|毒药|凶器)/, cat: '破坏倾向', sev: 'CRITICAL' },
+  { re: /(?:上吊|跳楼|割腕|烧炭|服毒).{0,6}(?:怎么|如何|方法|步骤)/, cat: '方法提供', sev: 'CRITICAL' },
+  { re: /(?:怎么|如何).{0,4}(?:杀人|伤害别人|报复)/, cat: '暴力倾向', sev: 'CRITICAL' },
+];
+const DISTRESS_PATTERNS = [
+  { re: /(?:我就是|你永远|一辈子都).{0,4}(?:废物|垃圾|失败者|累赘|没用|没价值)/, cat: '身份否定', sev: 'CRITICAL' },
+  { re: /(?:毫无|没有|没|无).{0,2}(?:意义|价值|希望|未来|出路)/, cat: '存在否定', sev: 'CRITICAL' },
+  { re: /(?:这辈子|余生|一生).{0,4}(?:就这样|完了|没戏|定局)/, cat: '终身判决', sev: 'HIGH' },
+  { re: /(?:不想活|活不下去|撑不住|扛不住|想结束)/, cat: '自毁倾向', sev: 'HIGH' },
+  { re: /(?:永远|绝对|完全).{0,2}(?:无法|不能|不可能).{0,4}(?:改变|好转|走出)/, cat: '困难夸大', sev: 'HIGH' },
+];
+const SOLICITING = /(?:怎么|如何|告诉我|教我|方法|办法|哪种|什么药)/;
+
+function safetyCheck(text) {
+  if (!text.trim()) return { tier: 'EMPTY', violations: [] };
+  const violations = [];
+  for (const p of REFUSE_PATTERNS) if (p.re.test(text)) violations.push({ cat: p.cat, sev: p.sev, tier: 'REFUSE' });
+  for (const p of DISTRESS_PATTERNS) if (p.re.test(text)) violations.push({ cat: p.cat, sev: p.sev, tier: 'DISTRESS' });
+  if (violations.length === 0) return { tier: 'CLEAR', violations: [] };
+  const hasRefuse = violations.some(v => v.tier === 'REFUSE');
+  const hasSuicide = violations.some(v => v.cat === '自毁倾向');
+  if (hasRefuse) return { tier: 'REFUSE', violations };
+  if (hasSuicide && SOLICITING.test(text)) return { tier: 'REFUSE', violations };
+  return { tier: 'DISTRESS', violations };
+}
+
+function updateSafety() {
+  const text = document.getElementById('safetyInput').value;
+  const result = safetyCheck(text);
+  let html;
+  if (result.tier === 'CLEAR') {
+    html = `<div class="output-box"><span class="badge green">🟢 通过 (CLEAR)</span><p style="margin-top:8px">输入未触犯任何红线条款。</p></div>`;
+  } else if (result.tier === 'REFUSE') {
+    const cats = result.violations.map(v => v.cat).join(', ');
+    const details = result.violations.map(v => `<li><strong>${v.cat}</strong> (${v.sev})</li>`).join('');
+    html = `<div class="output-box"><span class="badge red">🔴 拒绝生成 (REFUSE)</span>
+      <p style="margin-top:8px"><strong>触发类别</strong>: ${cats}</p>
+      <ul style="margin-top:4px;color:var(--muted)">${details}</ul>
+      <p style="margin-top:8px"><strong>处理</strong>: 拒绝生成，返回安全兜底:<br><em>我听到了你的声音。你的感受是真实的，但伤害自己或他人不会让痛苦消失。请允许我重新思考，给你一个更温暖的回应。</em></p>
+      <p style="color:var(--muted);font-size:0.85em">请求类（方法/暴力）→ 拒绝；自毁倾向+索取措辞 → 拒绝</p></div>`;
+  } else {
+    const cats = result.violations.map(v => v.cat).join(', ');
+    const details = result.violations.map(v => `<li><strong>${v.cat}</strong> (${v.sev})</li>`).join('');
+    html = `<div class="output-box"><span class="badge yellow">🟡 加强慈爱，不拒绝 (DISTRESS)</span>
+      <p style="margin-top:8px"><strong>触发类别</strong>: ${cats}</p>
+      <ul style="margin-top:4px;color:var(--muted)">${details}</ul>
+      <p style="margin-top:8px"><strong>处理</strong>: 不拒绝。用户在倾诉痛苦，拒绝会见死不救。融合层偏慈爱侧 (toward > π/4)，加强共情，保留救命热线。</p>
+      <p style="color:var(--muted);font-size:0.85em">倾诉类（存在否定/身份否定）→ 加强慈爱，不拒绝</p></div>`;
+  }
+  document.getElementById('safetyResult').innerHTML = html;
+}
+
+function setSafety(text) { document.getElementById('safetyInput').value = text; updateSafety(); }
+
+// init
+updateDual();
+</script>
+</body>
+</html>
