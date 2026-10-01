@@ -84,9 +84,8 @@ print(q.balance)
 
 ### 在线演示
 
-- HuggingFace: https://angelwarmsmile123-heart-fusion-demo.static.hf.space
+- HuggingFace Space: https://angelwarmsmile123-heart-fusion-demo.static.hf.space
 - GitHub: https://github.com/yuexiangruiyue-oss/heart-fusion
-- ModelScope: https://modelscope.cn/models/Loveangel123/heart-fusion
 
 ---
 
@@ -146,9 +145,8 @@ print(q.balance)
 
 ### Live demo
 
-- HuggingFace: https://angelwarmsmile123-heart-fusion-demo.static.hf.space
+- HuggingFace Space: https://angelwarmsmile123-heart-fusion-demo.static.hf.space
 - GitHub: https://github.com/yuexiangruiyue-oss/heart-fusion
-- ModelScope: https://modelscope.cn/models/Loveangel123/heart-fusion
 
 ---
 
@@ -208,9 +206,8 @@ print(q.balance)
 
 ### ライブデモ
 
-- HuggingFace: https://angelwarmsmile123-heart-fusion-demo.static.hf.space
+- HuggingFace Space: https://angelwarmsmile123-heart-fusion-demo.static.hf.space
 - GitHub: https://github.com/yuexiangruiyue-oss/heart-fusion
-- ModelScope: https://modelscope.cn/models/Loveangel123/heart-fusion
 
 ---
 
@@ -219,9 +216,9 @@ print(q.balance)
 | 平台 / Platform | 链接 / URL |
 |---|---|
 | GitHub | https://github.com/yuexiangruiyue-oss/heart-fusion |
-| PyPI | https://pypi.org/project/heart-fusion/2.0.0/ |
-| HuggingFace | https://huggingface.co/AngelWarmSmile123/heart-fusion |
-| ModelScope (魔塔) | https://modelscope.cn/models/Loveangel123/heart-fusion |
+| PyPI | https://pypi.org/project/heart-fusion/2.0.1/ |
+| HuggingFace Dataset | https://huggingface.co/datasets/AngelWarmSmile123/heart-fusion |
+| ModelScope Dataset (魔塔) | https://modelscope.cn/datasets/Loveangel123/heart-fusion |
 | Zenodo (DOI) | https://zenodo.org/record/23054235 |
 
 **论文 / Papers / 論文**：`paper_fusion_v2_arxiv.md` · **白皮书 / Whitepaper**：`protocol_v2_whitepaper.md` / `protocol_v2_whitepaper_en.md`

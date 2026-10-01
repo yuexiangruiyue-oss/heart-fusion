@@ -24,7 +24,7 @@ license: cc-by-nc-sa-4.0
 - [GitHub](https://github.com/yuexiangruiyue-oss/heart-fusion)
 - [PyPI](https://pypi.org/project/heart-fusion/2.0.1/)
 - [Zenodo](https://zenodo.org/record/23054235) (DOI: 10.5281/zenodo.23054235)
-- [HuggingFace Model](https://huggingface.co/AngelWarmSmile123/heart-fusion)
-- [ModelScope](https://modelscope.cn/models/Loveangel123/heart-fusion)
+- [HuggingFace Dataset](https://huggingface.co/datasets/AngelWarmSmile123/heart-fusion)
+- [ModelScope Dataset](https://modelscope.cn/datasets/Loveangel123/heart-fusion)
 
 CC BY-NC-SA 4.0 · 岳祥瑞 (Yue Xiangrui)
