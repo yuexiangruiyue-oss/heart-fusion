@@ -230,3 +230,15 @@ print(q.balance)
 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)（署名—非商业性使用—相同方式共享 4.0 国际）
 
 © 2026 岳祥瑞 (Yue Xiangrui) · ORCID: [0009-0001-8504-260X](https://orcid.org/0009-0001-8504-260X)
+
+## Contact
+
+- QQ: 406218898
+- WeChat: a13546076748
+- Google Email: yuexiangruiyue@gmail.com
+
+![wechat_qrcode](https://cdn-uploads.huggingface.co/production/uploads/6a0e9ee7a09839c3245efb4d/6GNsmhFg_Y2DZpR3ujYcG.png)
+
+![alipay_qrcode](https://cdn-uploads.huggingface.co/production/uploads/6a0e9ee7a09839c3245efb4d/0-LRrZ97UHDSNgYdum_kP.png)
+
+![欧易_1778716256597](https://cdn-uploads.huggingface.co/production/uploads/6a0e9ee7a09839c3245efb4d/RbH14JJPR6_CFTTpEKfYz.jpeg)
