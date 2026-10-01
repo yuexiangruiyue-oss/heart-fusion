@@ -8,12 +8,12 @@ version = "2.0.0"
 description = "用对偶共存(Dual z=a+ib)替换 Transformer argmax 的融合函数库 — 两极/多极共存, 不剔变量"
 readme = "README.md"
 requires-python = ">=3.10"
-license = {text = "MIT"}
+license = {text = "CC-BY-NC-4.0"}
 keywords = ["fusion", "dual", "argmax", "transformer", "coexistence", "sephirot", "harmony"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: MIT License",
+    "License :: Free To Use But Restricted",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
@@ -22,7 +22,7 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/AngelWarmSmile123/heart-fusion"
+Homepage = "https://github.com/yuexiangruiyue-oss/heart-fusion"
 
 [tool.setuptools.packages.find]
 include = ["heart_fusion*"]
