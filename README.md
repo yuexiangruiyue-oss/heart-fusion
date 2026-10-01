@@ -15,7 +15,7 @@ tags:
   - dual-coexistence
   - interpretability
   - safety-alignment
-pipeline_tag: text-generation
+pretty_name: Heart Fusion Protocol V2.0
 ---
 
 # 心融合协议 V2.0 · Heart Fusion Protocol V2.0 · 心融合プロトコル V2.0
