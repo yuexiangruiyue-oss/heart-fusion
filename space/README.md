@@ -3,11 +3,9 @@ title: Heart Fusion Protocol V2.0
 emoji: 🤗
 colorFrom: indigo
 colorTo: pink
-sdk: gradio
-sdk_version: "5.0.0"
-app_file: app.py
+sdk: static
 pinned: true
-license: apache-2.0
+license: cc-by-nc-sa-4.0
 ---
 
 # 🤗 心融合协议 V2.0 — Heart Fusion Protocol
@@ -21,18 +19,12 @@ license: apache-2.0
 3. **🎯 四极模式** — 理智/慈爱/逻辑/共情 雷达图，归一化熵平衡度
 4. **🛡️ 安全红线** — 两档分类：请求类拒绝 / 倾诉类加强慈爱不拒绝
 
-## 铁律
-
-- 禁止 Loss Function
-- 禁止梯度下降
-- 禁止奖励/惩罚机制
-- 系统不寻求最优解
-- 系统不允许剔除任何输入变量
-
 ## 链接
 
 - [GitHub](https://github.com/yuexiangruiyue-oss/heart-fusion)
-- [PyPI](https://pypi.org/project/heart-fusion/2.0.0/)
+- [PyPI](https://pypi.org/project/heart-fusion/2.0.1/)
 - [Zenodo](https://zenodo.org/record/23054235) (DOI: 10.5281/zenodo.23054235)
 - [HuggingFace Model](https://huggingface.co/AngelWarmSmile123/heart-fusion)
 - [ModelScope](https://modelscope.cn/models/Loveangel123/heart-fusion)
+
+CC BY-NC-SA 4.0 · 岳祥瑞 (Yue Xiangrui)
