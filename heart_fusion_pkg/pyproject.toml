@@ -4,12 +4,15 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "heart-fusion"
-version = "2.0.0"
+version = "2.0.1"
 description = "用对偶共存(Dual z=a+ib)替换 Transformer argmax 的融合函数库 — 两极/多极共存, 不剔变量"
 readme = "README.md"
 requires-python = ">=3.10"
-license = {text = "CC-BY-NC-4.0"}
-keywords = ["fusion", "dual", "argmax", "transformer", "coexistence", "sephirot", "harmony"]
+license = {text = "CC-BY-NC-SA-4.0"}
+authors = [
+    {name = "岳祥瑞 (Yue Xiangrui)", email = "yuexiangruiyue@gmail.com"},
+]
+keywords = ["fusion", "dual", "argmax", "transformer", "coexistence", "sephirot", "harmony", "ai-safety"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
@@ -23,6 +26,11 @@ classifiers = [
 
 [project.urls]
 Homepage = "https://github.com/yuexiangruiyue-oss/heart-fusion"
+PyPI = "https://pypi.org/project/heart-fusion/"
+HuggingFace = "https://huggingface.co/AngelWarmSmile123/heart-fusion"
+ModelScope = "https://modelscope.cn/models/Loveangel123/heart-fusion"
+Zenodo = "https://zenodo.org/record/23054235"
+ORCID = "https://orcid.org/0009-0001-8504-260X"
 
 [tool.setuptools.packages.find]
 include = ["heart_fusion*"]

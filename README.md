@@ -1,3 +1,23 @@
+---
+language:
+  - zh
+  - en
+  - ja
+license: cc-by-nc-sa-4.0
+tags:
+  - ai-safety
+  - transformer
+  - argmax
+  - fusion
+  - psychological-safety
+  - nlp
+  - sephirot
+  - dual-coexistence
+  - interpretability
+  - safety-alignment
+pipeline_tag: text-generation
+---
+
 # 心融合协议 V2.0 · Heart Fusion Protocol V2.0 · 心融合プロトコル V2.0
 
 > 用**融合函数**（对偶共存 `Dual z = a + i·b`）替代 Transformer 末步的 argmax「挑最大」——两极完整保留，永不剔除任何变量。
@@ -210,6 +230,6 @@ print(q.balance)
 
 ## 许可证 / License
 
-[CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/)（署名—非商业性使用 4.0 国际）
+[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)（署名—非商业性使用—相同方式共享 4.0 国际）
 
-© 2026 岳祥瑞 (Yue Xiangrui)
+© 2026 岳祥瑞 (Yue Xiangrui) · ORCID: [0009-0001-8504-260X](https://orcid.org/0009-0001-8504-260X)
