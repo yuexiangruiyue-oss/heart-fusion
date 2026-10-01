@@ -16,4 +16,4 @@ venv/
 *.safetensors
 *.pt
 *.pth
-*.model
+*.model.ms_upload_cache/
