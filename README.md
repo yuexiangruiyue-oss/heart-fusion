@@ -242,3 +242,29 @@ print(q.balance)
 ![alipay_qrcode](https://cdn-uploads.huggingface.co/production/uploads/6a0e9ee7a09839c3245efb4d/0-LRrZ97UHDSNgYdum_kP.png)
 
 ![欧易_1778716256597](https://cdn-uploads.huggingface.co/production/uploads/6a0e9ee7a09839c3245efb4d/RbH14JJPR6_CFTTpEKfYz.jpeg)
+
+---
+
+## 2026-10-08 新增：损失函数必然灾难论文 + unbinary 数据集
+
+### 论文《损失函数的必然灾难：二元对立、相反合一与融合函数》
+
+核心定理：**只要 AI 训练仍以损失函数为基准，AI 必因走二元对立的极端给人类带来灾难，概率 100%，因为是逻辑必然（非经验概率）。**
+
+- **Zenodo DOI**: [10.5281/zenodo.23228102](https://zenodo.org/records/23228102)
+- **三语版本**（见 `paper/` 目录）：
+  - 中文：`paper/paper_loss_catastrophe_zh.pdf` / `.md`
+  - English：`paper/paper_loss_catastrophe_en.pdf` / `.md`
+  - 日本語：`paper/paper_loss_catastrophe_ja.pdf` / `.md`
+- **作者**：岳祥瑞（Yue Xiangrui），ORCID: 0009-0001-8504-260X
+
+论文含 7 步演绎证明 + 2026 年 7–10 月真实 AI 安全事故论据（OpenAI/Anthropic/Meta/Google 智能体失控，超百家机构被波及）+「护栏有用但治不了根」辩证论证。
+
+### 数据集 unbinary（相反合一 · 心融合）
+
+89 条人类纠正 AI 二元对立的真实对话记录（36 强纠正 + 53 阐述）。
+
+- **HuggingFace**: [AngelWarmSmile123/opposite-unity-heart-fusion](https://huggingface.co/datasets/AngelWarmSmile123/opposite-unity-heart-fusion)
+- **ModelScope**: [Loveangel123/opposite-unity-heart-fusion](https://modelscope.cn/datasets/Loveangel123/opposite-unity-heart-fusion)
+- **GitHub**: 见本仓库 `dataset/` 目录
+- 核心数据：`dataset/data/unbinary.jsonl`（89 条定稿）
