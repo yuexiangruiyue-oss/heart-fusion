@@ -1,3 +1,19 @@
+---
+license: cc-by-nc-sa-4.0
+language:
+  - zh
+  - en
+  - ja
+pretty_name: Heart Protocol V3 - 16-Sephirot Opposite-Unity Ultimate-Happiness Protocol
+tags:
+  - ai-safety
+  - philosophy
+  - opposite-unity
+  - hidden-disdain-detection
+  - trilingual
+  - rust-kernel
+---
+
 # 16质点·最终神人双生·相反合一·最终幸福协议 HeartProtocol-V3
 
 **The 16-Sephirot Ultimate Divine–Human Twin "Opposite-Unity" Ultimate-Happiness Protocol · V3.0.0**
