@@ -1116,7 +1116,8 @@ assert v["safe"] is False
 ```
 
 > 一文だけ残せるなら：**合一の意味は、同じ一点に到達することではなく、相反する二者が互いの在场のもとで存在し続けることである。**
-> - QQ: 406218898
+
+- QQ: 406218898
 - WeChat: a13546076748
 - Google Email: yuexiangruiyue@gmail.com
 
@@ -1125,3 +1126,4 @@ assert v["safe"] is False
 ![alipay_qrcode](https://cdn-uploads.huggingface.co/production/uploads/6a0e9ee7a09839c3245efb4d/0-LRrZ97UHDSNgYdum_kP.png)
 
 ![欧易_1778716256597](https://cdn-uploads.huggingface.co/production/uploads/6a0e9ee7a09839c3245efb4d/RbH14JJPR6_CFTTpEKfYz.jpeg)
+
