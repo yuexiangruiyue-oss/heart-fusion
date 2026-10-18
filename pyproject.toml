@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "heart-protocol-v3"
+version = "3.0.0"
+description = "16质点最终神人双生相反合一最终幸福协议 V3.0"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "CC-BY-NC-SA-4.0"
+license-files = ["LICENSE"]
+authors = [
+    { name = "Yue Xiangrui (岳祥瑞)" },
+]
+keywords = ["heart-protocol", "fusion", "sephirot", "16-sephirot", "hidden-disdain", "rust-core"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Science/Research",
+    "Natural Language :: Chinese (Simplified)",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Rust",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+[tool.setuptools]
+# src 布局：Python 包位于 src/；四大内容目录（rust_core/hidden_disdain/space/paper）
+# 位于仓库根，通过显式 package-dir 映射打进 wheel（安装后位于 site-packages 顶层）。
+package-dir = { "" = "src", "rust_core" = "rust_core", "hidden_disdain" = "hidden_disdain", "space" = "space", "paper" = "paper" }
+include-package-data = true
+packages = [
+    "heart_protocol",
+    "heart_protocol.formal",
+    "heart_protocol.middleware",
+    "heart_protocol.benchmark",
+    "rust_core",
+    "rust_core.src",
+    "rust_core.src.codegen",
+    "rust_core.windows-x64",
+    "hidden_disdain",
+    "space",
+    "paper",
+]
+
+[tool.setuptools.package-data]
+# 目录级通配：不写死文件名，paper 的 PDF、space 的 HTML 后续交付时自动打入 wheel。
+"*" = ["*"]

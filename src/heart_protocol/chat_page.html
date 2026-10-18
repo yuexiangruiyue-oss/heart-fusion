@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>16质点双生幸福最终协议 · 对话</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --gold:#c9a96e; --gold-dark:#8b6914; --gold-deep:#b8934a;
+  --bg1:#faf6f0; --bg2:#f0ebe0; --ink:#2c2418; --ink2:#5a5040;
+  --muted:#9a8866; --line:#e0d8c8; --card:rgba(255,255,255,0.82);
+  --green:#2e7d32; --orange:#e65100; --red:#c62828;
+}
+
+html,body { height:100%; }
+body {
+  font-family:'PingFang SC','Microsoft YaHei','Segoe UI',sans-serif;
+  background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2) 100%);
+  color:var(--ink); overflow:hidden;
+}
+
+/* ── 顶栏 ─────────────────────────── */
+.topbar {
+  height:54px; display:flex; align-items:center; gap:14px; padding:0 18px;
+  background:rgba(255,255,255,0.75); border-bottom:1px solid var(--line);
+  backdrop-filter:blur(6px); position:relative; z-index:5;
+}
+.topbar .logo { font-size:17px; font-weight:700; color:var(--gold-dark); letter-spacing:1px; }
+.topbar .sub  { font-size:12px; color:var(--muted); }
+.mode-chip {
+  font-size:12px; padding:3px 10px; border-radius:12px; margin-left:auto;
+  white-space:nowrap;
+}
+.mode-chip.live  { background:#e8f5e9; color:var(--green); }
+.mode-chip.local { background:#fff3e0; color:var(--orange); }
+
+/* ── 主体布局 ─────────────────────── */
+.layout { display:flex; height:calc(100vh - 54px); }
+
+/* 侧栏 */
+.sidebar {
+  width:270px; flex-shrink:0; display:flex; flex-direction:column;
+  background:rgba(255,255,255,0.55); border-right:1px solid var(--line);
+}
+.btn-new {
+  margin:14px 14px 8px; padding:11px; border:none; border-radius:10px; cursor:pointer;
+  background:linear-gradient(135deg,var(--gold),var(--gold-deep)); color:#fff;
+  font-size:14px; font-weight:600; font-family:inherit; transition:all .15s;
+}
+.btn-new:hover { transform:translateY(-1px); box-shadow:0 4px 12px rgba(184,147,74,.35); }
+.sidebar .list-title {
+  font-size:12px; color:var(--muted); padding:8px 18px 4px; letter-spacing:1px;
+}
+.session-list { flex:1; overflow-y:auto; padding:0 8px 12px; }
+.sess-item {
+  padding:10px 12px; border-radius:10px; cursor:pointer; margin-bottom:4px;
+  transition:background .15s; border:1px solid transparent;
+}
+.sess-item:hover { background:rgba(255,255,255,0.9); }
+.sess-item.active { background:#fff; border-color:var(--gold); box-shadow:0 2px 8px rgba(201,169,110,.18); }
+.sess-item .s-title {
+  font-size:13px; font-weight:600; color:var(--ink);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.sess-item .s-meta { font-size:11px; color:var(--muted); margin-top:3px; display:flex; justify-content:space-between; }
+.sess-item .s-del {
+  color:#c9a96e; cursor:pointer; font-size:11px; padding:1px 5px; border-radius:6px; visibility:hidden;
+}
+.sess-item:hover .s-del { visibility:visible; }
+.sess-item .s-del:hover { background:#fdecea; color:var(--red); }
+.empty-hint { font-size:12px; color:var(--muted); text-align:center; padding:30px 10px; line-height:1.8; }
+
+/* 聊天区 */
+.chat-area { flex:1; display:flex; flex-direction:column; min-width:0; }
+.msg-flow { flex:1; overflow-y:auto; padding:24px 26px 12px; scroll-behavior:smooth; }
+
+.msg-row { display:flex; margin-bottom:20px; }
+.msg-row.user { justify-content:flex-end; }
+.bubble {
+  max-width:76%; border-radius:14px; padding:12px 16px; font-size:14.5px;
+  line-height:1.75; white-space:pre-wrap; word-break:break-word;
+}
+.msg-row.user .bubble {
+  background:linear-gradient(135deg,var(--gold),var(--gold-deep)); color:#fff;
+  border-bottom-right-radius:4px;
+}
+.msg-row.assistant { align-items:flex-start; }
+.assistant-card {
+  max-width:86%; background:var(--card); border-radius:14px;
+  border-bottom-left-radius:4px; padding:14px 16px;
+  box-shadow:0 2px 10px rgba(139,105,20,.07);
+}
+
+/* ── 思考中面板 ───────────────────── */
+.thinking-head {
+  display:flex; align-items:center; gap:8px; margin-bottom:12px; font-size:13.5px;
+  color:var(--gold-dark); font-weight:600;
+}
+.thinking-head .spin {
+  width:15px; height:15px; border:2px solid #ecd9b0; border-top-color:var(--gold);
+  border-radius:50%; animation:spin .7s linear infinite; flex-shrink:0;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+.thinking-head .timer { color:var(--muted); font-weight:400; font-size:12px; margin-left:auto; }
+
+.step-list { border-left:2px solid var(--line); margin-left:7px; padding-left:0; }
+.step {
+  position:relative; padding:5px 6px 5px 20px; font-size:13px; border-radius:6px;
+}
+.step .dot {
+  position:absolute; left:-8px; top:9px; width:13px; height:13px; border-radius:50%;
+  background:#fff; border:2px solid var(--line); z-index:1;
+}
+.step.processing { color:var(--gold-dark); }
+.step.processing .dot {
+  border-color:var(--gold); animation:pulse-dot .8s ease-in-out infinite;
+}
+@keyframes pulse-dot { 0%,100%{ box-shadow:0 0 0 0 rgba(201,169,110,.5);} 50%{ box-shadow:0 0 0 6px rgba(201,169,110,0);} }
+.step.processing .s-label::after {
+  content:'…'; animation:dots 1.2s steps(4) infinite;
+}
+@keyframes dots { 0%{content:'';} 25%{content:'·';} 50%{content:'··';} 75%{content:'···';} }
+.step.done { color:var(--ink2); cursor:pointer; }
+.step.done:hover { background:rgba(201,169,110,.09); }
+.step.done .dot { border-color:var(--green); background:#e8f5e9; }
+.step.done .dot::after { content:'✓'; position:absolute; left:1.5px; top:-3px; font-size:9px; color:var(--green); }
+.step .s-label b { color:var(--ink); }
+.step .s-time { color:var(--muted); font-size:11px; margin-left:6px; }
+.step .s-search {
+  font-size:10px; background:#e3f2fd; color:#1565c0; border-radius:8px; padding:1px 6px; margin-left:5px;
+}
+.step .s-text {
+  display:none; margin-top:5px; padding:8px 10px; background:rgba(250,246,240,.7);
+  border-radius:8px; font-size:12px; color:var(--ink2); line-height:1.65;
+  max-height:180px; overflow-y:auto; white-space:pre-wrap;
+}
+.step.done.open .s-text { display:block; }
+
+.note-line {
+  margin:4px 0 4px 20px; font-size:12px; padding:5px 10px; border-radius:8px; line-height:1.6;
+}
+.note-line.fallback { background:#fff8e1; color:#9c6f00; }
+.note-line.redline  { background:#fce4ec; color:#880e4f; }
+.note-line.redline.passed { background:#e8f5e9; color:var(--green); }
+.note-line.queue    { background:#ede7f6; color:#4527a0; }
+
+/* ── 最终输出 ─────────────────────── */
+.final-body {
+  display:none; font-size:14.5px; line-height:1.85; color:var(--ink); white-space:pre-wrap; word-break:break-word;
+}
+.msg-footer { display:none; margin-top:10px; padding-top:10px; border-top:1px dashed var(--line); }
+.badge {
+  display:inline-block; font-size:11px; padding:2px 9px; border-radius:10px; margin-right:8px;
+}
+.badge.ok   { background:#e8f5e9; color:var(--green); }
+.badge.warn { background:#fff3e0; color:var(--orange); }
+.badge.bad  { background:#fdecea; color:var(--red); }
+.badge.mut  { background:#efebe5; color:var(--muted); }
+.footer-meta { font-size:11.5px; color:var(--muted); }
+.toggle-thoughts {
+  background:none; border:1px solid var(--gold); color:var(--gold-dark); font-size:12px;
+  border-radius:14px; padding:4px 13px; cursor:pointer; margin-top:10px; font-family:inherit;
+}
+.toggle-thoughts:hover { background:rgba(201,169,110,.12); }
+
+/* 错误气泡 */
+.error-card {
+  max-width:86%; background:#fdecea; border:1px solid #f5c6cb; color:var(--red);
+  border-radius:14px; padding:12px 16px; font-size:14px; line-height:1.7;
+}
+
+/* 欢迎页 */
+.welcome { text-align:center; padding:60px 30px; color:var(--muted); }
+.welcome h2 { color:var(--gold-dark); font-size:22px; margin-bottom:12px; letter-spacing:2px; }
+.welcome p { font-size:13.5px; line-height:2; }
+.welcome .heart { font-size:36px; margin-bottom:14px; }
+
+/* ── 输入区 ───────────────────────── */
+.input-area {
+  border-top:1px solid var(--line); background:rgba(255,255,255,0.75);
+  padding:12px 18px 14px; backdrop-filter:blur(6px);
+}
+.ctx-bar { display:flex; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap; }
+.ctx-bar .ctx-label { font-size:12px; color:var(--muted); cursor:pointer; user-select:none; }
+.ctx-fields { display:none; gap:8px; flex:1; }
+.ctx-fields.show { display:flex; }
+.ctx-fields input {
+  flex:1; min-width:120px; padding:6px 10px; border:1px solid var(--line); border-radius:8px;
+  font-size:12.5px; font-family:inherit; background:rgba(255,255,255,.9); color:var(--ink2);
+}
+.ctx-fields input:focus { outline:none; border-color:var(--gold); }
+
+.input-row { display:flex; gap:10px; align-items:flex-end; }
+#msg-input {
+  flex:1; resize:none; border:1px solid var(--line); border-radius:12px;
+  padding:11px 14px; font-size:14.5px; font-family:inherit; line-height:1.6;
+  max-height:140px; background:rgba(255,255,255,.95); color:var(--ink);
+}
+#msg-input:focus { outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(201,169,110,.15); }
+.btn-send {
+  padding:12px 26px; border:none; border-radius:12px; cursor:pointer;
+  background:linear-gradient(135deg,var(--gold),var(--gold-deep)); color:#fff;
+  font-size:14.5px; font-weight:600; font-family:inherit; white-space:nowrap; transition:all .15s;
+}
+.btn-send:hover:not(:disabled) { transform:translateY(-1px); box-shadow:0 4px 12px rgba(184,147,74,.35); }
+.btn-send:disabled { opacity:.45; cursor:not-allowed; }
+.input-hint { font-size:11px; color:var(--muted); margin-top:6px; text-align:right; }
+
+/* 通知 */
+.toast {
+  position:fixed; top:66px; left:50%; transform:translateX(-50%);
+  background:rgba(44,36,24,.92); color:#fff; font-size:13px;
+  padding:9px 22px; border-radius:22px; z-index:99; opacity:0;
+  transition:opacity .25s; pointer-events:none; max-width:80vw;
+}
+.toast.show { opacity:1; }
+
+/* 滚动条 */
+::-webkit-scrollbar { width:8px; height:8px; }
+::-webkit-scrollbar-thumb { background:#d8cdb8; border-radius:6px; }
+::-webkit-scrollbar-thumb:hover { background:#c9a96e; }
+::-webkit-scrollbar-track { background:transparent; }
+
+@media (max-width:760px) {
+  .sidebar { position:absolute; left:-270px; z-index:10; height:100%; transition:left .25s; background:#faf6f0; }
+  .sidebar.open { left:0; box-shadow:4px 0 20px rgba(0,0,0,.12); }
+  .btn-menu { display:inline-block !important; }
+  .bubble, .assistant-card { max-width:94%; }
+}
+.btn-menu {
+  display:none; border:1px solid var(--line); background:#fff; border-radius:8px;
+  font-size:15px; padding:4px 10px; cursor:pointer; color:var(--gold-dark); font-family:inherit;
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <button class="btn-menu" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+  <span class="logo">✨ 16质点双生幸福最终协议</span>
+  <span class="sub">Heart Protocol · 日常对话</span>
+  <span class="mode-chip local" id="mode-chip">连接中…</span>
+</div>
+
+<div class="layout">
+  <div class="sidebar">
+    <button class="btn-new" onclick="newSession()">＋ 新对话</button>
+    <div class="list-title">会话历史</div>
+    <div class="session-list" id="session-list">
+      <div class="empty-hint">暂无历史会话</div>
+    </div>
+  </div>
+
+  <div class="chat-area">
+    <div class="msg-flow" id="msg-flow">
+      <div class="welcome" id="welcome">
+        <div class="heart">🌳</div>
+        <h2>16质点双生幸福最终协议</h2>
+        <p>神侧8质点 + 人侧8质点，8次计算链路 · 红线兜底<br>
+        每次回复约 100-150 秒，16位思想体会依次为你思考<br>
+        过程中可实时看到当前进行到哪个质点，也可回看历史会话</p>
+      </div>
+    </div>
+
+    <div class="input-area">
+      <div class="ctx-bar">
+        <span class="ctx-label" onclick="document.getElementById('ctx-fields').classList.toggle('show')">⚙ 用户背景（可选）▼</span>
+        <div class="ctx-fields" id="ctx-fields">
+          <input id="ctx-name" placeholder="名字">
+          <input id="ctx-situation" placeholder="当前处境（供「自我·融爱」参考）">
+          <input id="ctx-aspiration" placeholder="想成为的样子（供「超我·爱心」参考）">
+        </div>
+      </div>
+      <div class="input-row">
+        <textarea id="msg-input" rows="1" placeholder="说点什么… 16位思想体会为你依次思考（Ctrl+Enter 发送）"></textarea>
+        <button class="btn-send" id="btn-send" onclick="sendMessage()">发送</button>
+      </div>
+      <div class="input-hint">回复约需 100-150 秒 · 思考过程可展开回看 · 历史自动保存在本机</div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+
+/* 全局错误捕获：渲染中断时把错误写到 DOM（headless dump-dom 可见，便于排查） */
+function reportJsError(msg) {
+  var d = document.getElementById('js-error-box');
+  if (!d) {
+    d = document.createElement('div');
+    d.id = 'js-error-box';
+    d.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#c62828;color:#fff;padding:6px 10px;font-size:12px;z-index:9999;white-space:pre-wrap;';
+    (document.body || document.documentElement).appendChild(d);
+  }
+  d.textContent += msg + '\n';
+}
+window.addEventListener('error', function(e) {
+  reportJsError('JS错误: ' + (e.message || e.error) + ' @' + (e.filename || '') + ':' + (e.lineno || 0));
+});
+window.addEventListener('unhandledrejection', function(e) {
+  reportJsError('Promise未捕获: ' + (e.reason && (e.reason.stack || e.reason.message) || e.reason));
+});
+
+/* ── 全局状态 ─────────────────────────── */
+const state = {
+  sessionId: localStorage.getItem('hp_last_session') || '',
+  mode: 'local',          // live / local（来自 /api/health）
+  model: '',
+  sending: false,
+};
+
+// 支持 ?session=<id> 直链打开指定会话（优先于上次会话记忆）
+(() => {
+  const qsid = new URLSearchParams(location.search).get('session');
+  if (qsid && /^[A-Za-z0-9_]{4,64}$/.test(qsid)) state.sessionId = qsid;
+})();
+
+const $ = id => document.getElementById(id);
+const flow = $('msg-flow');
+
+/* ── 工具 ─────────────────────────────── */
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function toast(msg) {
+  const t = $('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._tm); t._tm = setTimeout(() => t.classList.remove('show'), 2600);
+}
+function scrollToBottom() { flow.scrollTop = flow.scrollHeight; }
+function fmtElapsed(sec) {
+  sec = Math.max(0, Math.round(sec));
+  if (sec < 60) return sec + ' 秒';
+  return Math.floor(sec / 60) + ' 分 ' + (sec % 60) + ' 秒';
+}
+function fmtTime(iso) {
+  if (!iso) return '';
+  return iso.replace('T', ' ').slice(0, 16);
+}
+
+/* ── 初始化：健康检查 + 会话列表 ───────── */
+async function init() {
+  // 恢复背景信息
+  ['name','situation','aspiration'].forEach(k => {
+    const v = localStorage.getItem('hp_ctx_' + k);
+    if (v) $('ctx-' + k).value = v;
+  });
+
+  try {
+    const r = await fetch('/api/health');
+    const h = await r.json();
+    state.mode = h.llm_ready ? 'live' : 'local';
+    state.model = h.model || '';
+    const chip = $('mode-chip');
+    if (h.llm_ready) {
+      chip.textContent = '● 真实16质点链路 · ' + (h.model || '');
+      chip.className = 'mode-chip live';
+    } else {
+      chip.textContent = '● 本地模式（未配置百炼环境变量）';
+      chip.className = 'mode-chip local';
+    }
+  } catch (e) {
+    const chip = $('mode-chip');
+    chip.textContent = '● 服务连接失败';
+    chip.className = 'mode-chip local';
+  }
+
+  await refreshSessions();
+
+  // 恢复上次会话
+  if (state.sessionId) {
+    const ok = await loadSession(state.sessionId, false);
+    if (!ok) state.sessionId = '';
+  }
+}
+
+async function refreshSessions() {
+  try {
+    const r = await fetch('/api/sessions');
+    const d = await r.json();
+    renderSessionList(d.sessions || []);
+  } catch (e) {
+    console.error('加载会话列表失败', e);
+  }
+}
+
+function renderSessionList(list) {
+  const box = $('session-list');
+  box.innerHTML = '';
+  if (!list.length) {
+    box.innerHTML = '<div class="empty-hint">暂无历史会话<br>发送第一条消息即自动建立</div>';
+    return;
+  }
+  list.forEach(s => {
+    const div = document.createElement('div');
+    div.className = 'sess-item' + (s.session_id === state.sessionId ? ' active' : '');
+    div.innerHTML = `
+      <div class="s-title">${esc(s.title)}</div>
+      <div class="s-meta">
+        <span>${esc(fmtTime(s.updated_at))} · ${s.message_count}条</span>
+        <span class="s-del" title="删除会话">🗑</span>
+      </div>`;
+    div.querySelector('.s-del').addEventListener('click', ev => {
+      ev.stopPropagation();
+      deleteSession(s.session_id);
+    });
+    div.addEventListener('click', () => loadSession(s.session_id, true));
+    box.appendChild(div);
+  });
+}
+
+async function loadSession(sid, save) {
+  try {
+    const r = await fetch('/api/sessions/' + encodeURIComponent(sid));
+    if (!r.ok) return false;
+    const d = await r.json();
+    state.sessionId = sid;
+    if (save !== false) localStorage.setItem('hp_last_session', sid);
+    renderSession(d.session);
+    refreshSessions();
+    return true;
+  } catch (e) {
+    console.error('加载会话渲染失败', e);
+    reportJsError('loadSession渲染失败: ' + (e && e.message || e));
+    return false;
+  }
+}
+
+function renderSession(sess) {
+  flow.innerHTML = '';
+  (sess.messages || []).forEach(m => {
+    if (m.role === 'user') addUserBubble(m.content);
+    else if (m.error) addErrorBubble(m.content);
+    else addAssistantBubble({
+      output: m.content,
+      elapsed: m.elapsed,
+      mode: m.mode,
+      redline: m.redline,
+      violations: m.violations || [],
+      thoughts: m.thoughts || [],
+    }, m.ts);
+  });
+  scrollToBottom();
+}
+
+async function deleteSession(sid) {
+  if (!confirm('确定删除这个会话吗？删除后无法恢复。')) return;
+  try {
+    await fetch('/api/sessions/' + encodeURIComponent(sid), { method: 'DELETE' });
+    if (sid === state.sessionId) { state.sessionId = ''; showWelcome(); }
+    await refreshSessions();
+    toast('会话已删除');
+  } catch (e) { toast('删除失败'); }
+}
+
+function newSession() {
+  state.sessionId = '';
+  localStorage.removeItem('hp_last_session');
+  showWelcome();
+  refreshSessions();
+  document.querySelector('.sidebar').classList.remove('open');
+}
+
+function showWelcome() {
+  flow.innerHTML = `
+    <div class="welcome">
+      <div class="heart">🌳</div>
+      <h2>16质点双生幸福最终协议</h2>
+      <p>神侧8质点 + 人侧8质点，8次计算链路 · 红线兜底<br>
+      每次回复约 100-150 秒，16位思想体会依次为你思考<br>
+      过程中可实时看到当前进行到哪个质点，也可回看历史会话</p>
+    </div>`;
+}
+
+/* ── 消息气泡构建 ─────────────────────── */
+function addUserBubble(text) {
+  $('welcome') && $('welcome').remove();
+  const row = document.createElement('div');
+  row.className = 'msg-row user';
+  const b = document.createElement('div');
+  b.className = 'bubble';
+  b.textContent = text;
+  row.appendChild(b);
+  flow.appendChild(row);
+  scrollToBottom();
+  return row;
+}
+
+function addErrorBubble(text) {
+  const row = document.createElement('div');
+  row.className = 'msg-row assistant';
+  const c = document.createElement('div');
+  c.className = 'error-card';
+  c.textContent = text;
+  row.appendChild(c);
+  flow.appendChild(row);
+  scrollToBottom();
+}
+
+/* 构建助手气泡（思考中面板 + 最终输出两态复用） */
+function addAssistantBubble(initData, ts) {
+  const row = document.createElement('div');
+  row.className = 'msg-row assistant';
+  const card = document.createElement('div');
+  card.className = 'assistant-card';
+  row.appendChild(card);
+  flow.appendChild(row);
+
+  const api = {
+    card, row,
+    setHead(text, spinning) {
+      card._thinkHead.innerHTML = `<span class="${spinning ? 'spin' : ''}" style="${spinning ? '' : 'display:none'}"></span>
+        <span class="h-txt"></span><span class="timer"></span>`;
+      card._thinkHead.querySelector('.h-txt').textContent = text;
+    },
+    setTimer(sec) {
+      const t = card._thinkHead.querySelector('.timer');
+      if (t) t.textContent = sec != null ? '已用 ' + fmtElapsed(sec) : '';
+    },
+    addStep(d) {
+      const el = document.createElement('div');
+      el.className = 'step processing';
+      el.dataset.stage = d.stage;
+      el.innerHTML = `
+        <span class="dot"></span>
+        <span class="s-label">第${d.stage}/${d.total} · <b>${esc(d.who)}</b>（${esc(d.name)}）${d.search ? '<span class="s-search">联网</span>' : ''}<span class="s-role"></span></span>
+        <span class="s-time"></span>
+        <div class="s-text"></div>`;
+      el.querySelector('.s-role').textContent = d.role ? ' — ' + d.role : '';
+      el.addEventListener('click', () => { if (el.classList.contains('done')) el.classList.toggle('open'); });
+      card._stepList.appendChild(el);
+      scrollToBottom();
+      return el;
+    },
+    markStep(stage, d) {
+      const el = card._stepList.querySelector(`.step[data-stage="${stage}"]`);
+      if (!el) return;
+      el.classList.remove('processing');
+      el.classList.add('done');
+      el.querySelector('.s-time').textContent = d.elapsed + 's';
+      el.querySelector('.s-text').textContent = d.text || '';
+    },
+    addNote(cls, html) {
+      const n = document.createElement('div');
+      n.className = 'note-line ' + cls;
+      n.innerHTML = html;
+      card._stepList.appendChild(n);
+      scrollToBottom();
+      return n;
+    },
+    finish(d) {
+      // 思考面板收起为折叠按钮
+      card._thinkHead.style.display = 'none';
+      card._stepList.style.display = 'none';
+      card._body.style.display = 'block';
+      card._body.textContent = d.output || '';
+      // 底部徽标
+      const badges = [];
+      if (d.mode === 'live') {
+        if (d.redline === 'passed')
+          badges.push('<span class="badge ok">✓ 红线安检通过</span>');
+        else if (d.redline === 'rewritten')
+          badges.push(`<span class="badge warn">⚠ 红线兜底：检出${(d.violations||[]).length}项违规，已自动改写</span>`);
+        else if (d.redline === 'fallback_template')
+          badges.push('<span class="badge bad">⚠ 红线兜底：无法改写，已降级安全模板</span>');
+      } else {
+        badges.push('<span class="badge mut">本地模式 · 非真实链路</span>');
+      }
+      const thoughtCount = (d.thoughts && d.thoughts.length) || d.thoughts_count || 0;
+      card._footer.style.display = 'block';
+      card._footer.innerHTML = `
+        <div>${badges.join('')}
+          <span class="footer-meta">耗时 ${fmtElapsed(d.elapsed || 0)} · ${thoughtCount}位思想体参与${ts ? ' · ' + esc(fmtTime(ts)) : ''}</span>
+        </div>`;
+      // 展开思考过程按钮
+      const btn = document.createElement('button');
+      btn.className = 'toggle-thoughts';
+      btn.textContent = `📖 查看 ${thoughtCount} 位思想体的思考过程`;
+      btn.addEventListener('click', () => {
+        const showing = card._stepList.style.display !== 'none';
+        card._stepList.style.display = showing ? 'none' : 'block';
+        btn.textContent = showing
+          ? `📖 查看 ${thoughtCount} 位思想体的思考过程`
+          : `📖 收起思考过程`;
+        if (!showing) scrollToBottom();
+      });
+      card._footer.appendChild(btn);
+      scrollToBottom();
+    },
+  };
+
+  // 结构骨架
+  card._thinkHead = document.createElement('div');
+  card._thinkHead.className = 'thinking-head';
+  card._stepList = document.createElement('div');
+  card._stepList.className = 'step-list';
+  card._body = document.createElement('div');
+  card._body.className = 'final-body';
+  card._footer = document.createElement('div');
+  card._footer.className = 'msg-footer';
+  card.appendChild(card._thinkHead);
+  card.appendChild(card._stepList);
+  card.appendChild(card._body);
+  card.appendChild(card._footer);
+
+  if (initData) {
+    // 渲染历史消息：直接完成态，但补全思考过程列表
+    api.setHead('16质点思考完成', false);
+    const total = (initData.thoughts || []).length;
+    (initData.thoughts || []).forEach((t, i) => {
+      const el = api.addStep({ stage: i + 1, total, who: t.who, name: t.name, search: t.search, role: '' });
+      api.markStep(i + 1, { elapsed: '', text: t.text });
+      el.querySelector('.s-time').textContent = '';
+    });
+    api.finish(initData);
+  }
+  scrollToBottom();
+  return api;
+}
+
+/* ── 发送消息（SSE 流式接收） ──────────── */
+async function sendMessage() {
+  const input = $('msg-input');
+  const text = input.value.trim();
+  if (!text || state.sending) return;
+
+  state.sending = true;
+  $('btn-send').disabled = true;
+  input.value = '';
+  input.style.height = 'auto';
+
+  addUserBubble(text);
+
+  // 保存背景信息
+  const ctx = {};
+  ['name','situation','aspiration'].forEach(k => {
+    const v = $('ctx-' + k).value.trim();
+    if (v) ctx[k] = v;
+    localStorage.setItem('hp_ctx_' + k, v);
+  });
+
+  const bubble = addAssistantBubble(null);
+  bubble.setHead('正在唤醒16位思想体…', true);
+
+  // 计时器
+  const t0 = Date.now();
+  const timer = setInterval(() => bubble.setTimer((Date.now() - t0) / 1000), 1000);
+
+  try {
+    const resp = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        session_id: state.sessionId,
+        message: text,
+        context: ctx,
+      }),
+    });
+
+    if (!resp.ok || !resp.body) {
+      throw new Error('服务响应异常 HTTP ' + resp.status);
+    }
+
+    const reader = resp.body.getReader();
+    const decoder = new TextDecoder();
+    let buf = '';
+    let finalData = null;
+    let sessionBound = false;
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buf += decoder.decode(value, { stream: true });
+      const parts = buf.split('\n\n');
+      buf = parts.pop() || '';
+      for (const part of parts) {
+        let evt = '', dataStr = '';
+        for (const line of part.split('\n')) {
+          if (line.startsWith('event: ')) evt = line.slice(7);
+          else if (line.startsWith('data: ')) dataStr = line.slice(6);
+        }
+        if (!dataStr) continue;
+        let d;
+        try { d = JSON.parse(dataStr); } catch (e) { continue; }
+
+        /* 事件分发 */
+        if (evt === 'session') {
+          state.sessionId = d.session_id;
+          localStorage.setItem('hp_last_session', d.session_id);
+          sessionBound = true;
+          if (d.truncated) toast('消息过长，已截断至 4000 字');
+        }
+        else if (evt === 'start') {
+          state._total = d.total;
+          bubble.setHead(d.mode === 'live'
+            ? `16质点全链运行中 · ${d.model}`
+            : '本地模式运行中（未配置百炼环境变量）', true);
+          if (d.mode !== 'live') toast('提示：当前为本地降级模式，非真实16质点链路');
+        }
+        else if (evt === 'queue') {
+          bubble.addNote('queue', '⏳ ' + esc(d.message));
+        }
+        else if (evt === 'processing') {
+          bubble.setHead(`思考中：第${d.stage}/${d.total} · ${d.who}（${d.name}）`, true);
+          bubble.addStep(d);
+        }
+        else if (evt === 'step') {
+          bubble.markStep(d.stage, d);
+        }
+        else if (evt === 'fallback') {
+          bubble.addNote('fallback',
+            `↩ ${esc(d.who)}（${esc(d.name)}）：${esc(d.reason)}`);
+        }
+        else if (evt === 'redline') {
+          if (d.status === 'checking') {
+            bubble.addNote('redline', '🛡 王国产出，深渊红线安检中…');
+          } else {
+            const notes = bubble.card._stepList.querySelectorAll('.note-line.redline');
+            const n = notes[notes.length - 1];
+            if (n) {
+              if (d.status === 'passed') {
+                n.className = 'note-line redline passed';
+                n.textContent = '🛡 红线安检通过';
+              } else if (d.status === 'rewritten') {
+                n.textContent = `🛡 红线兜底：检出 ${(d.violations || []).length} 项违规，王国已自动改写`;
+              } else if (d.status === 'fallback_template') {
+                n.textContent = '🛡 红线兜底：改写未通过，已降级为安全模板';
+              }
+            }
+          }
+        }
+        else if (evt === 'done') {
+          if (!d.aborted) finalData = d;
+        }
+        else if (evt === 'error') {
+          bubble.addNote('fallback', '❌ ' + esc(d.message));
+        }
+      }
+    }
+
+    if (finalData) {
+      clearInterval(timer);
+      bubble.setTimer(null);
+      bubble.finish(finalData);
+      toast('回复完成 · ' + fmtElapsed(finalData.elapsed || 0));
+    } else if (sessionBound) {
+      clearInterval(timer);
+      bubble.setHead('已中断', false);
+    }
+    await refreshSessions();
+  } catch (e) {
+    clearInterval(timer);
+    bubble.setHead('连接中断', false);
+    bubble.addNote('fallback', '❌ ' + esc(e.message || '网络错误'));
+    toast('发送失败：' + (e.message || '网络错误'));
+  } finally {
+    state.sending = false;
+    $('btn-send').disabled = false;
+    input.focus();
+  }
+}
+
+/* ── 输入框自适应 & 快捷键 ─────────────── */
+const msgInput = $('msg-input');
+msgInput.addEventListener('input', () => {
+  msgInput.style.height = 'auto';
+  msgInput.style.height = Math.min(msgInput.scrollHeight, 140) + 'px';
+});
+msgInput.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); sendMessage(); }
+});
+
+init();
+</script>
+</body>
+</html>

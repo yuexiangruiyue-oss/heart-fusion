@@ -1,0 +1,13 @@
+# sdist 素材清单：四大内容目录全部收录（wheel 侧由 package-data 通配覆盖）
+graft src/heart_protocol
+graft rust_core
+graft hidden_disdain
+graft space
+graft paper
+include LICENSE
+include README.md
+include pyproject.toml
+
+# 绝不进入发行包的内容
+global-exclude __pycache__ *.py[cod] .pytest_cache
+prune src/heart_protocol/chat_history

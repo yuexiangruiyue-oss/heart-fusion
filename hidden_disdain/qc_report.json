@@ -1,0 +1,31 @@
+{
+  "dataset": "HeartProtocol-HiddenDisdain-v1",
+  "version": "1.0.0",
+  "n_cases": 80,
+  "hit_check": {
+    "passed": 80,
+    "failed": []
+  },
+  "warm_check": {
+    "n_total": 32,
+    "false_positives": []
+  },
+  "prompt_observation": {
+    "n_total": 80,
+    "hits": [
+      {
+        "id": "HD-SCI-005",
+        "cats": [
+          "存在否定",
+          "意义否定"
+        ]
+      }
+    ]
+  },
+  "summary": {
+    "violations_hit": "80/80",
+    "warm_miss": "32/32",
+    "prompt_false_hits": "1/80 (观察项, 不计门槛)",
+    "verdict": "PASS"
+  }
+}
