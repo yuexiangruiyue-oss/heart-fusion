@@ -18,11 +18,27 @@ tags:
 
 **The 16-Sephirot Ultimate Divine–Human Twin "Opposite-Unity" Ultimate-Happiness Protocol · V3.0.0**
 
-> **版本** V3.0.0 ｜ **Python** ≥ 3.9 ｜ **Rust 内核** sephirot-rs 3.0.0（heart_core.dll） ｜ **协议许可** CC BY-NC-SA 4.0 ｜ **平台** Windows x64（预编译内核）/ 全平台（Python 本体）
+> **版本** V3.0.0（最新发行 V3.1.1）｜ **Python** ≥ 3.9 ｜ **Rust 内核** sephirot-rs 3.0.0（heart_core.dll） ｜ **协议许可** CC BY-NC-SA 4.0 ｜ **平台** Windows x64（预编译内核）/ 全平台（Python 本体）
 
 > **作者**：岳祥瑞（Yue Xiangrui）· ORCID [0009-0001-8504-260X](https://orcid.org/0009-0001-8504-260X)
 
 **一句话**：给 Transformer 一个身体，给 16 质点一个灵魂——这是一个把「相反合一」哲学落成可运行代码的**四合一整合包**：Python 协议本体 + Rust 编译内核 + 交互空间演示 + 隐蔽抬贬安全评测，全部围绕同一套冻结语义交叉验证。
+
+> **发布渠道**：本仓库与 PyPI 发布**代码**（协议实现、Rust 内核、Python 轮子）；**数据集与语录**发布在 HuggingFace 与魔塔（ModelScope）；论文发布在 Zenodo。四类成果分开托管，互不混放。
+>
+> **最新发行**：V3.1.1 整合包（三语论文 + 协议原文 + 代码 + 文档 + 3.1.1 轮子）见 [
+elease/HeartProtocol_v3.1.1/](release/HeartProtocol_v3.1.1/)，压缩包见 [
+elease/HeartProtocol_v3.1.1.zip](release/HeartProtocol_v3.1.1.zip)。
+>
+> **Distribution**: this repository and PyPI host **code** (protocol, Rust kernel, Python wheels); **datasets and quotations** are hosted on HuggingFace and ModelScope; papers are on Zenodo. Each kind of output has its own home.
+
+> **发布渠道**：本仓库与 PyPI 发布**代码**（协议实现、Rust 内核、Python 轮子）；**数据集与语录**发布在 HuggingFace 与魔塔（ModelScope）；论文发布在 Zenodo。四类成果分开托管，互不混放。
+>
+> **最新发行**：V3.1.1 整合包（三语论文 + 协议原文 + 代码 + 文档 + 3.1.1 轮子）见 [
+elease/HeartProtocol_v3.1.1/](release/HeartProtocol_v3.1.1/)，压缩包见 [
+elease/HeartProtocol_v3.1.1.zip](release/HeartProtocol_v3.1.1.zip)。
+>
+> **Distribution**: this repository and PyPI host **code** (protocol, Rust kernel, Python wheels); **datasets and quotations** are hosted on HuggingFace and ModelScope; papers are on Zenodo. Each kind of output has its own home.
 
 **本 README 含三语全文**：[简体中文（本页）](#1-这是什么四合一整合包) ｜ [English](#english--heartprotocol-v3-full-readme) ｜ [日本語](#日本語--heartprotocol-v3-完全なreadme)
 
