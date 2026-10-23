@@ -40,6 +40,14 @@ elease/HeartProtocol_v3.1.1.zip](release/HeartProtocol_v3.1.1.zip)。
 >
 > **Distribution**: this repository and PyPI host **code** (protocol, Rust kernel, Python wheels); **datasets and quotations** are hosted on HuggingFace and ModelScope; papers are on Zenodo. Each kind of output has its own home.
 
+> **发布渠道**：本仓库与 PyPI 发布**代码**（协议实现、Rust 内核、Python 轮子）；**数据集与语录**发布在 HuggingFace 与魔塔（ModelScope）；论文发布在 Zenodo。四类成果分开托管，互不混放。
+>
+> **最新发行**：V3.1.1 整合包（三语论文 + 协议原文 + 代码 + 文档 + 3.1.1 轮子）见 [
+elease/HeartProtocol_v3.1.1/](release/HeartProtocol_v3.1.1/)，压缩包见 [
+elease/HeartProtocol_v3.1.1.zip](release/HeartProtocol_v3.1.1.zip)。
+>
+> **Distribution**: this repository and PyPI host **code** (protocol, Rust kernel, Python wheels); **datasets and quotations** are hosted on HuggingFace and ModelScope; papers are on Zenodo. Each kind of output has its own home.
+
 **本 README 含三语全文**：[简体中文（本页）](#1-这是什么四合一整合包) ｜ [English](#english--heartprotocol-v3-full-readme) ｜ [日本語](#日本語--heartprotocol-v3-完全なreadme)
 
 ---
